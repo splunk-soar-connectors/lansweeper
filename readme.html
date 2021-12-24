@@ -1,0 +1,355 @@
+<!-- File: readme.html
+
+    Copyright (c) Lansweeper, 2021
+
+    This unpublished material is proprietary to Lansweeper.
+    All rights reserved. The methods and
+    techniques described herein are considered trade secrets
+    and/or confidential. Reproduction or distribution, in whole
+    or in part, is forbidden except by express written permission
+    of Lansweeper.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software distributed under
+    the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+    either express or implied. See the License for the specific language governing permissions
+    and limitations under the License.
+-->
+<html>
+
+<body>
+  <p>
+    It is recommended to read the documentation for the app to understand the functioning of the actions and the asset
+    configuration or the action parameters associated with it. For further details, refer to <a
+      href='https://docs.lansweeper.com/docs' target="_blank">Lansweeper Docs</a>.
+  </p>
+  <h2>Port Details</h2>
+  <p>
+      The app uses HTTP/ HTTPS protocol for communicating with the Lansweeper server. Below are the default ports used by the Splunk SOAR Connector.
+      <table>
+          <tr>
+              <th>SERVICE NAME</th>
+              <th>TRANSPORT PROTOCOL</th>
+              <th>PORT</th>
+          </tr>
+          <tr>
+              <td>http</td>
+              <td>tcp</td>
+              <td>80</td>
+          </tr>
+          <tr>
+              <td>https</td>
+              <td>tcp</td>
+              <td>443</td>
+          </tr>
+      </table>
+  </p>
+  <p>
+    <h2>Steps to Configure the Lansweeper Phantom app's asset</h2>
+    <p>
+      Follow these steps to configure the Lansweeper Phantom app's asset:
+      <ul>
+        <li>Log in to the Lansweeper platform.</li>
+        <ul>
+          <li>Once logged in, all available sites for your account are shown.</li>
+          <li>Please select the sites for which you need to fetch the asset details.</li>
+          <li>Go to <b>Developers tools</b> by clicking the user's profile logo (Settings).</li>
+          <li>Click on <b>All applications</b>.</li>
+          <li>Select the application type as <b>Personal Application</b></li>
+          <li>Enter the application name and click <b>ADD APPLICATION</b>.</li>
+          <li>Now, Navigate to the created application from <b>All applications</b>.</li>
+          <li>Click on the <b>Authorize</b> button and select the sites which you want to authorize.</li>
+          <li>Copy the generated Application Identity Code.</li>
+        </ul>
+        <li>Now, Log in to your Phantom instance.</li>
+        <ul>
+          <li>Navigate to the <b>Home</b> dropdown and select <b>Apps</b>.</li>
+          <li>Search the Lansweeper App from the search box.</li>
+          <li>Click on the <b>CONFIGURE NEW ASSET</b> button.</li>
+          <li>Navigate to the <b>Asset Info</b> tab and enter the Asset name and Asset description.
+          </li>
+          <li>Navigate to the <b>Asset Settings</b>.</li>
+          <li>Paste the generated <b>Application Identity Code</b> from Lansweeper UI to its respective configuration parameter.</li>
+          <li>Save the asset.</li>
+          <li>Now, test the connectivity of the Phantom server to the Lansweeper instance by clicking the <b>TEST CONNECTIVITY</b> button.</li>
+        </ul>
+      </ul>
+
+      <b>Note:</b>
+      <ul>
+        <li>Please make sure to select the application type as <b>Personal Application</b>.
+          The current integration will only support the Personal Application type.</li>
+        <li>Keep your 'Application Identity Code' secure.</li>
+        <li>API clients can use your 'Application Identity Code' to gain
+          access to the APIs as your user. Keep this value somewhere safe
+          and secure. Never share them with anyone.</li>
+      </ul>
+    </p>
+
+    <h2>Explanation of the Asset Configuration Parameters</h2>
+    The asset configuration parameters affect 'test connectivity' and some
+    other actions of the application. The parameters related to test
+    connectivity action is Application Identity Code.
+    <ul>
+      <li>
+        <b>Application Identity Code: </b> Identity code for site data asset authorization.
+      </li>
+    </ul>
+  </p>
+  <p>
+    <h2>Explanation of the Lansweeper Actions' Parameters</h2>
+    <ul>
+      <li>
+        <h3>Test Connectivity (Action Workflow Details)</h3>
+        <ul>
+          <li> This action will test the connectivity of the Phantom server to the Lansweeper instance by making an
+            initial API call using the provided asset configuration parameters. </li>
+          <li>The action will internally store the details of the authorized sites
+            (provided by the user in the authorization flow) in the state file.
+            These sites will be used for fetching the asset details in other actions.</li>
+          <li> The action validates the provided asset configuration parameters. Based on the API call response, the
+            appropriate success and failure message will be displayed when the action gets executed.</li>
+        </ul>
+      </li>
+
+      <li>
+        <h3>List Authorized Sites</h3>
+        In order to retrieve information from a specific site, the application
+        has to have permission to access the information from such site. The
+        goal of this action is to retrieve the list of the authorized sites with
+        their names and ID(s), which the application has access to. The user can
+        use the Site ID from the output response as an input to the Hunt MAC or
+        the Hunt IP actions. This action also stores/updates the authorized sites
+        stored in the state file.
+        <ul>
+          <li><b>Action Parameter</b>: No action parameters are required.</li>
+          <li><b>Examples:</b>
+            <ul>
+              <li> Get the Authorized Site ID(s) with their names.
+                <ul style="list-style-type:none;">
+                  <li>No action parameters are required.
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <h3>Hunt IP</h3>
+        Fetch the details of the asset from the Lansweeper platform for the
+        given Site ID and IP address. The Site ID can be retrieved from the
+        output of the List Authorized Sites action. If the user leaves the Site ID field empty,
+        the action will consider all the authorized sites as input which were stored in the state file
+        during the test connectivity or list authorized sites action run. The paginator is
+        implemented internally in this action which will paginate through the responses
+        based on the assetPagination field. The max results per site parameter can be
+        used to limit the output responses.
+        <ul>
+          <li><b>Action Parameter: Site ID</b></li>
+          <ul>
+            <li>This parameter is the unique key for a particular site. A site is
+              like a workspace inside Lansweeper. Users can create and join
+              several sites, within the same account. This is an optional parameter
+              in order to get the asset details for a particular site. The action will
+              consider the authorized sites as input if the user leaves the Site ID field
+              empty. It expects a comma-separated string as an input parameter.
+              If any one of the Site IDs is invalid in the comma-separated string, the action
+              will skip that Site ID and continue with the valid ones. An error message
+              will be shown if all the Site IDs are invalid. The Site ID can be retrieved
+              from the output of the List Authorized Sites action.</li>
+          </ul>
+          <b>Note:</b>
+          <ul>
+            <li>The user can only provide the sites that were authorized during the Test Connectivity
+              flow, as an input parameter to Site ID.</li>
+          </ul>
+          <li><b>Action Parameter: IP </b></li>
+          <ul>
+            <li>This parameter is basically an IP address of the assets.
+              While passing this parameter we expect to get the details of the asset which are associated with this IP
+              address.
+              It expects a comma-separated string as an input parameter.
+              If any one of the IPs is invalid in the comma-separated string, the action will skip that IP address and
+              continue with the valid ones.
+              An error message will be shown if all the IP addresses are invalid.
+              This is a required parameter.</li>
+          </ul>
+          <li><b>Action Parameter: Max Results Per Site</b></li>
+          <ul>
+            <li>This parameter allows the user to limit the number of results per site.
+              It expects a numeric value as an input. The default value is 50 for
+              which it will fetch the first 50 assets from a particular site.</li>
+          </ul>
+          <li><b>Examples:</b>
+            <ul>
+              <li> List the asset details with the IP address '10.0.1.3' and consider all the
+                authorized sites as input for the Site ID parameter.
+                <ul style="list-style-type:none;">
+                  <li>Site ID = ""</li>
+                  <li>IP = "10.0.1.3"</li>
+                </ul>
+              </li>
+            </ul>
+            <ul>
+              <li> List the asset details with the IP address '10.0.1.3' and Site ID
+                '00d4ed4f-b2ad-4587-91b5-07bd453c5c76'.
+                <ul style="list-style-type:none;">
+                  <li>Site ID = "00d4ed4f-b2ad-4587-91b5-07bd453c5c76"</li>
+                  <li>IP = "10.0.1.3"</li>
+                </ul>
+              </li>
+            </ul>
+            <ul>
+              <li>List the asset details with the IP address '10.0.1.3' and Site ID
+                '00d4ed4f-b2ad-4587-91b5-07bd453c5c76'.
+                The results should also be limited to 15.
+                <ul style="list-style-type:none;">
+                  <li>Site ID = "00d4ed4f-b2ad-4587-91b5-07bd453c5c76"</li>
+                  <li>IP = "10.0.1.3" </li>
+                  <li>Max Results Per Site = 15</li>
+                </ul>
+              </li>
+              <b>Note:</b> Max Results Per Site value will be handled internally, which will paginate through the assets for a particular site.
+            </ul>
+            <ul>
+              <li>List the asset details with the IP address '10.0.1.3' or '10.0.1.4' and Site ID
+                '00d4ed4f-b2ad-4587-91b5-07bd453c5c76'.
+                The results should also be limited to 50.
+                <ul style="list-style-type:none;">
+                  <li>Site ID = "00d4ed4f-b2ad-4587-91b5-07bd453c5c76"</li>
+                  <li>IP = "10.0.1.3, 10.0.1.4"</li>
+                  <li>Max Results Per Site = 50</li>
+                </ul>
+              </li>
+              <b>Note:</b> Max Results Per Site value will be handled internally, which will paginate through the assets for a particular site.
+            </ul>
+            <ul>
+              <li>List the asset details with the IP address '10.0.1.3'
+                and Site ID '00d4ed4f-b2ad-4587-91b5-07bd453c5c76' or '00d4ed4f-b2ad-4587-91b5-07bd453c5d23'.
+                The results should also be limited to 50 for a particular site.
+                <ul style="list-style-type:none;">
+                  <li>Site ID = "00d4ed4f-b2ad-4587-91b5-07bd453c5c76, 00d4ed4f-b2ad-4587-91b5-07bd453c5d23"</li>
+                  <li>IP = "10.0.1.3"</li>
+                  <li>Max Results Per Site = 50</li>
+                </ul>
+              </li>
+              <b>Note:</b> Max Results Per Site value will be handled internally, which will paginate through the assets for a particular site.
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <h3>Hunt MAC</h3>
+        Fetch the details of the asset from the Lansweeper platform for the
+        given Site ID and MAC address. The Site ID can be retrieved from the
+        output of the List Authorized Sites action. If the user leaves the Site ID field empty,
+        the action will consider all the authorized sites as input which were stored in the state file
+        during the test connectivity or list authorized sites action run. The paginator is
+        implemented internally in this action which will paginate through the responses
+        based on the assetPagination field. The max results per site parameter can be
+        used to limit the output responses.
+        <ul>
+          <li><b>Action Parameter: Site ID</b></li>
+          <ul>
+            <li>This parameter is the unique key for a particular site. A site is
+              like a workspace inside Lansweeper. Users can create and join
+              several sites, within the same account. This is an optional parameter
+              in order to get the asset details for a particular site. The action will
+              consider the authorized sites as input if the user leaves the Site ID field
+              empty. It expects a comma-separated string as an input parameter.
+              If any one of the Site IDs is invalid in the comma-separated string, the action
+              will skip that Site ID and continue with the valid ones. An error message
+              will be shown if all the Site IDs are invalid. The Site ID can be retrieved
+              from the output of the List Authorized Sites action.</li>
+          </ul>
+          <b>Note:</b>
+          <ul>
+            <li>The user can only provide the sites that were authorized during the Test Connectivity
+              flow, as an input parameter to Site ID.</li>
+          </ul>
+          <li><b>Action Parameter: MAC</b></li>
+          <ul>
+            <li>This parameter is basically a MAC address of the assets. While
+              passing this parameter we expect to get the details of the asset
+              which are associated with this MAC address. It expects a
+              comma-separated string as an input parameter. If any one of the MAC
+              addresses is invalid in the comma-separated string, the action will skip
+              that MAC address and continue with the valid ones. An error message
+              will be shown if all the MAC addresses are invalid. This is a
+              required parameter.</li>
+          </ul>
+          <li><b>Action Parameter: Max Results Per Site</b></li>
+          <ul>
+            <li>This parameter allows the user to limit the number of results. It
+              expects a numeric value as an input. The default value is 50 for
+              which it will fetch the first 50 assets from a particular site.</li>
+          </ul>
+          <li><b>Examples:</b>
+            <ul>
+              <li> List the asset details with the MAC address '68:FB:7E:71:00:00' and
+                consider all the authorized sites as input for the Site ID parameter.
+                <ul style="list-style-type:none;">
+                  <li>Site ID = ""</li>
+                  <li>MAC = "68:FB:7E:71:00:00"</li>
+                </ul>
+              </li>
+            </ul>
+            <ul>
+              <li> List the asset details with the MAC address '68:FB:7E:71:00:00' and Site ID
+                '00d4ed4f-b2ad-4587-91b5-07bd453c5c76'.
+                <ul style="list-style-type:none;">
+                  <li>Site ID = "00d4ed4f-b2ad-4587-91b5-07bd453c5c76"</li>
+                  <li>MAC = "68:FB:7E:71:00:00"</li>
+                </ul>
+              </li>
+            </ul>
+            <ul>
+              <li>List the asset details with the MAC address '68:FB:7E:71:00:00' and Site ID
+                '00d4ed4f-b2ad-4587-91b5-07bd453c5c76'.
+                The results should also be limited to 15.
+                <ul style="list-style-type:none;">
+                  <li>Site ID = "00d4ed4f-b2ad-4587-91b5-07bd453c5c76"</li>
+                  <li>MAC = "68:FB:7E:71:00:00"</li>
+                  <li>Max Results Per Site = 15</li>
+                </ul>
+              </li>
+              <b>Note:</b> Max Results Per Site value will be handled internally, which will paginate through the assets for a particular site.
+            </ul>
+            <ul>
+              <li>List the asset details with the MAC address '68:FB:7E:71:00:00' or '68:FB:7E:71:00:01' and Site ID
+                '00d4ed4f-b2ad-4587-91b5-07bd453c5c76'.
+                The results should also be limited to 50.
+                <ul style="list-style-type:none;">
+                  <li>Site ID = "00d4ed4f-b2ad-4587-91b5-07bd453c5c76"</li>
+                  <li>MAC = "68:FB:7E:71:00:00, 68:FB:7E:71:00:01"</li>
+                  <li>Max Results Per Site = 50</li>
+                </ul>
+              </li>
+              <b>Note:</b> Max Results Per Site value will be handled internally, which will paginate through the assets for a particular site.
+            </ul>
+            <ul>
+              <li>List the asset details with the MAC address '68:FB:7E:71:00:00'
+                and Site ID '00d4ed4f-b2ad-4587-91b5-07bd453c5c76' or '00d4ed4f-b2ad-4587-91b5-07bd453c5d23'.
+                The results should also be limited to 50 for a particular site.
+                <ul style="list-style-type:none;">
+                  <li>Site ID = "00d4ed4f-b2ad-4587-91b5-07bd453c5c76, 00d4ed4f-b2ad-4587-91b5-07bd453c5d23"</li>
+                  <li>MAC = "68:FB:7E:71:00:00"</li>
+                  <li>Max Results Per Site = 50</li>
+                </ul>
+              </li>
+              <b>Note:</b> Max Results Per Site value will be handled internally, which will paginate through the assets for a particular site.
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </p>
+</body>
+
+</html>
