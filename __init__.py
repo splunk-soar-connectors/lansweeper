@@ -1,6 +1,6 @@
 # File: __init__.py
 #
-# Copyright (c) Lansweeper, 2021
+# Copyright (c) 2022 Splunk Inc., Lansweeper
 #
 # This unpublished material is proprietary to Lansweeper.
 # All rights reserved. The methods and
