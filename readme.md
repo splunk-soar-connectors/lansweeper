@@ -1,6 +1,6 @@
 [comment]: # " File: readme.md"
 [comment]: # ""
-[comment]: # "    Copyright (c) 2022 Splunk Inc., Lansweeper"
+[comment]: # "    Copyright (c) Lansweeper, 2022"
 [comment]: # ""
 [comment]: # "This unpublished material is proprietary to Lansweeper."
 [comment]: # "All rights reserved. The methods and"

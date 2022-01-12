@@ -10,7 +10,7 @@
     "python_version": "3",
     "product_version_regex": ".*",
     "publisher": "Lansweeper",
-    "license": "Copyright (c) 2022 Splunk Inc., Lansweeper",
+    "license": "Copyright (c) Lansweeper, 2022",
     "app_version": "1.0.0",
     "utctime_updated": "2021-11-17T09:56:36.956886Z",
     "package_name": "phantom_lansweeper",

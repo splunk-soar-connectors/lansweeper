@@ -1,6 +1,6 @@
 # File: lansweeper_consts.py
 #
-# Copyright (c) 2022 Splunk Inc., Lansweeper
+# Copyright (c) Lansweeper, 2022
 #
 # This unpublished material is proprietary to Lansweeper.
 # All rights reserved. The methods and
