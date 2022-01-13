@@ -133,7 +133,7 @@ class LansweeperConnector(BaseConnector):
 
         return phantom.APP_SUCCESS, parameter
 
-    def _is_ip(self, input_ip_address):
+    def _is_ipv4(self, input_ip_address):
         """
         Validate given IP address and return True if address is valid IPv4 address.
 
@@ -596,7 +596,7 @@ class LansweeperConnector(BaseConnector):
         invalid_ips = []
         ip_condition_string = ""
         for ip in ip_list:
-            if self._is_ip(ip):
+            if self._is_ipv4(ip):
                 valid_ips.append(ip)
                 ip_condition_string += (
                     """{
