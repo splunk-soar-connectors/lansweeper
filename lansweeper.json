@@ -335,6 +335,9 @@
                     "data_type": "string",
                     "example_values": [
                         "https://app.lansweeper.com/api-demo-data-v2/asset/MTQ3My1Bc3NldC1mODdkZjg5MS1kNmVkLTQyYzgtYThmMS1jZDJmMTBlYmE1ZGU=/summary"
+                    ],
+                    "contains": [
+                        "url"
                     ]
                 },
                 {
@@ -604,6 +607,9 @@
                     "data_type": "string",
                     "example_values": [
                         "https://app.lansweeper.com/api-demo-data-v2/asset/MTQ5Mi1Bc3NldC1mODdkZjg5MS1kNmVkLTQyYzgtYThmMS1jZDJmMTBlYmE1ZGU=/summary"
+                    ],
+                    "contains": [
+                        "url"
                     ]
                 },
                 {
