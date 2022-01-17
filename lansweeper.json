@@ -18,9 +18,6 @@
     "min_phantom_version": "5.0.0",
     "app_wizard_version": "1.0.0",
     "fips_compliant": true,
-    "latest_tested_versions": [
-        "Cloud, v2 2021"
-    ],
     "pip_dependencies": {
         "wheel": [
             {
