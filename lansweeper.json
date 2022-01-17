@@ -1,0 +1,692 @@
+{
+    "appid": "2bde184d-aace-476b-b584-1dab0926d25d",
+    "name": "Lansweeper",
+    "description": "This app integrates with Lansweeper to perform investigative actions",
+    "type": "investigative",
+    "product_vendor": "Lansweeper",
+    "logo": "logo_lansweeper.svg",
+    "logo_dark": "logo_lansweeper_dark.svg",
+    "product_name": "Lansweeper",
+    "python_version": "3",
+    "product_version_regex": ".*",
+    "publisher": "Lansweeper",
+    "license": "Copyright (c) Lansweeper, 2022",
+    "app_version": "1.0.0",
+    "utctime_updated": "2021-11-17T09:56:36.956886Z",
+    "package_name": "phantom_lansweeper",
+    "main_module": "lansweeper_connector.py",
+    "min_phantom_version": "5.0.0",
+    "app_wizard_version": "1.0.0",
+    "fips_compliant": true,
+    "pip_dependencies": {
+        "wheel": [
+            {
+                "module": "beautifulsoup4",
+                "input_file": "wheels/beautifulsoup4-4.9.1-py3-none-any.whl"
+            },
+            {
+                "module": "certifi",
+                "input_file": "wheels/certifi-2021.10.8-py2.py3-none-any.whl"
+            },
+            {
+                "module": "chardet",
+                "input_file": "wheels/chardet-3.0.4-py2.py3-none-any.whl"
+            },
+            {
+                "module": "idna",
+                "input_file": "wheels/idna-2.10-py2.py3-none-any.whl"
+            },
+            {
+                "module": "macaddress",
+                "input_file": "wheels/macaddress-1.1.3-py3-none-any.whl"
+            },
+            {
+                "module": "requests",
+                "input_file": "wheels/requests-2.25.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "soupsieve",
+                "input_file": "wheels/soupsieve-2.3.1-py3-none-any.whl"
+            },
+            {
+                "module": "urllib3",
+                "input_file": "wheels/urllib3-1.26.7-py2.py3-none-any.whl"
+            }
+        ]
+    },
+    "configuration": {
+        "identity_code": {
+            "description": "Application Identity Code",
+            "data_type": "password",
+            "required": true,
+            "order": 0
+        }
+    },
+    "actions": [
+        {
+            "action": "test connectivity",
+            "identifier": "test_connectivity",
+            "description": "Validate the asset configuration for connectivity using supplied configuration",
+            "type": "test",
+            "read_only": true,
+            "parameters": {},
+            "output": [],
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "list authorized sites",
+            "identifier": "list_authorized_sites",
+            "description": "Retrieve authorized sites from Lansweeper with their ID(s) and names",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {},
+            "output": [
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "string",
+                    "contains": [
+                        "lansweeper site id"
+                    ],
+                    "column_name": "Site ID",
+                    "column_order": 0,
+                    "example_values": [
+                        "56d4ed4f-b2ad-4587-91b5-07bd453c5a12"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "column_name": "Site Name",
+                    "column_order": 1,
+                    "example_values": [
+                        "api-demo-data-v2"
+                    ]
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total sites: 1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.total_sites",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "hunt ip",
+            "identifier": "hunt_ip",
+            "description": "Fetch the details of the asset from the Lansweeper platform for the given site ID and IP address",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "site_id": {
+                    "description": "Site ID (allows comma-separated string)",
+                    "data_type": "string",
+                    "primary": true,
+                    "contains": [
+                        "lansweeper site id"
+                    ],
+                    "order": 0
+                },
+                "ip": {
+                    "description": "IP address (allows comma-separated string)",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "lansweeper ip"
+                    ],
+                    "order": 1
+                },
+                "max_results_per_site": {
+                    "description": "Maximum number of assets to fetch per site. The default value is 50",
+                    "data_type": "numeric",
+                    "default": 50,
+                    "order": 2
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.ip",
+                    "data_type": "string",
+                    "contains": [
+                        "lansweeper ip"
+                    ],
+                    "example_values": [
+                        "192.168.36.10"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.max_results_per_site",
+                    "data_type": "numeric",
+                    "example_values": [
+                        50
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.site_id",
+                    "data_type": "string",
+                    "contains": [
+                        "lansweeper site id"
+                    ],
+                    "example_values": [
+                        "56d4ed4f-b2ad-4587-91b5-06bd453c5c32"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Laptop"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.domain",
+                    "data_type": "string",
+                    "example_values": [
+                        "WORKGROUP"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.firstSeen",
+                    "data_type": "string",
+                    "example_values": [
+                        "2019-01-31T11:40:22.187Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.fqdn",
+                    "data_type": "string",
+                    "example_values": [
+                        "HYPERV2012E2.LAB02.test"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.ipAddress",
+                    "data_type": "string",
+                    "contains": [
+                        "lansweeper ip"
+                    ],
+                    "example_values": [
+                        "10.0.1.72"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.lastSeen",
+                    "data_type": "string",
+                    "example_values": [
+                        "2019-02-15T11:40:22.187Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.mac",
+                    "data_type": "string",
+                    "contains": [
+                        "lansweeper mac"
+                    ],
+                    "example_values": [
+                        "00:0C:29:0A:3D:5F"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Lansweeper2 iPhone iOS 12.1.0 FFG9"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.type",
+                    "data_type": "string",
+                    "example_values": [
+                        "Windows"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.userDomain",
+                    "data_type": "string",
+                    "example_values": [
+                        "Lansweeper"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.userName",
+                    "data_type": "string",
+                    "example_values": [
+                        "Administrator"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetCustom.manufacturer",
+                    "data_type": "string",
+                    "example_values": [
+                        "Dell Inc."
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetCustom.model",
+                    "data_type": "string",
+                    "example_values": [
+                        "VMware Virtual Platform"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetCustom.serialNumber",
+                    "data_type": "string",
+                    "example_values": [
+                        "7LDDH2J"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetCustom.sku",
+                    "data_type": "string",
+                    "example_values": [
+                        "16.04-LTS"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.site_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "api-demo-data-v2"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.url",
+                    "data_type": "string",
+                    "example_values": [
+                        "https://app.lansweeper.com/api-demo-data-v2/asset/MTQ3My1Bc3NldC1mODdkZjg5MS1kNmVkLTQyYzgtYThmMS1jZDJmMTBlYmE1ZGU=/summary"
+                    ],
+                    "contains": [
+                        "url"
+                    ]
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total assets: 2, Total sites: 2. Please refer the summary section in action result dictionary for more information."
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.authorized_site_ids",
+                    "data_type": "string",
+                    "contains": [
+                        "lansweeper site id"
+                    ],
+                    "example_values": [
+                        "56d4ed4f-b2ad-4587-91b5-06bd453c5c32"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.invalid_ips",
+                    "data_type": "string",
+                    "example_values": [
+                        "192..12.13"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.total_assets",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.unauthorized_site_ids",
+                    "data_type": "string",
+                    "example_values": [
+                        "56d4ed4f-b2ad-4587-91b5-07bd453c5a12"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.valid_ips",
+                    "data_type": "string",
+                    "contains": [
+                        "lansweeper ip"
+                    ],
+                    "example_values": [
+                        "10.0.1.72"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "width": 12,
+                "height": 5,
+                "type": "custom",
+                "view": "lansweeper_view.display_view"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "hunt mac",
+            "identifier": "hunt_mac",
+            "description": "Fetch the details of the asset from the Lansweeper platform for the given site ID and MAC address",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "site_id": {
+                    "description": "Site ID (allows comma-separated string)",
+                    "data_type": "string",
+                    "primary": true,
+                    "contains": [
+                        "lansweeper site id"
+                    ],
+                    "order": 0
+                },
+                "mac": {
+                    "description": "MAC address (allows comma-separated string)",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "lansweeper mac"
+                    ],
+                    "order": 1
+                },
+                "max_results_per_site": {
+                    "description": "Maximum number of assets to fetch per site. The default value is 50",
+                    "data_type": "numeric",
+                    "default": 50,
+                    "order": 2
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.mac",
+                    "data_type": "string",
+                    "contains": [
+                        "lansweeper mac"
+                    ],
+                    "example_values": [
+                        "00:0C:29:0A:3D:5F"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.max_results_per_site",
+                    "data_type": "numeric",
+                    "example_values": [
+                        50
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.site_id",
+                    "data_type": "string",
+                    "contains": [
+                        "lansweeper site id"
+                    ],
+                    "example_values": [
+                        "56d4ed4f-b2ad-4587-91b5-06bd453c5c32"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*._id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Laptop"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.domain",
+                    "data_type": "string",
+                    "example_values": [
+                        "WORKGROUP"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.firstSeen",
+                    "data_type": "string",
+                    "example_values": [
+                        "2019-08-13T08:04:25.510Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.fqdn",
+                    "data_type": "string",
+                    "example_values": [
+                        "HYPERV2012T3.LAB02.test"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.ipAddress",
+                    "data_type": "string",
+                    "contains": [
+                        "lansweeper ip"
+                    ],
+                    "example_values": [
+                        "10.0.1.72"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.lastSeen",
+                    "data_type": "string",
+                    "example_values": [
+                        "2019-11-04T09:59:05.080Z"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.mac",
+                    "data_type": "string",
+                    "contains": [
+                        "lansweeper mac"
+                    ],
+                    "example_values": [
+                        "00:0C:29:0A:3D:5F"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Lansweeper2 iPhone iOS 12.1.0 FFG9"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.type",
+                    "data_type": "string",
+                    "example_values": [
+                        "Windows"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.userDomain",
+                    "data_type": "string",
+                    "example_values": [
+                        "Lansweeper"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetBasicInfo.userName",
+                    "data_type": "string",
+                    "example_values": [
+                        "Administrator"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetCustom.manufacturer",
+                    "data_type": "string",
+                    "example_values": [
+                        "Dell Inc."
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetCustom.model",
+                    "data_type": "string",
+                    "example_values": [
+                        "PowerEdge 2950"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetCustom.serialNumber",
+                    "data_type": "string",
+                    "example_values": [
+                        "7LDDH2J"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.assetCustom.sku",
+                    "data_type": "string",
+                    "example_values": [
+                        "16.04-LTS"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.site_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "api-demo-data-v2"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.url",
+                    "data_type": "string",
+                    "example_values": [
+                        "https://app.lansweeper.com/api-demo-data-v2/asset/MTQ5Mi1Bc3NldC1mODdkZjg5MS1kNmVkLTQyYzgtYThmMS1jZDJmMTBlYmE1ZGU=/summary"
+                    ],
+                    "contains": [
+                        "url"
+                    ]
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total assets: 2, Total sites: 2. Please refer the summary section in action result dictionary for more information."
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.authorized_site_ids",
+                    "data_type": "string",
+                    "contains": [
+                        "lansweeper site id"
+                    ],
+                    "example_values": [
+                        "56d4ed4f-b2ad-4587-91b5-06bd453c5c32"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.invalid_macs",
+                    "data_type": "string",
+                    "example_values": [
+                        "00:0C:29:0A:3D"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.total_assets",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.unauthorized_site_ids",
+                    "data_type": "string",
+                    "example_values": [
+                        "56d4ed4f-b2ad-4587-91b5-07bd453c5a12"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.valid_macs",
+                    "data_type": "string",
+                    "contains": [
+                        "lansweeper mac"
+                    ],
+                    "example_values": [
+                        "00:0C:29:0A:3D:5F"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "width": 12,
+                "height": 5,
+                "type": "custom",
+                "view": "lansweeper_view.display_view"
+            },
+            "versions": "EQ(*)"
+        }
+    ]
+}
