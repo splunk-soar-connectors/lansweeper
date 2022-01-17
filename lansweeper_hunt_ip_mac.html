@@ -1,0 +1,344 @@
+{% extends 'widgets/widget_template.html' %}
+{% load custom_template %}
+
+{% block custom_title_prop %}{% if title_logo %}style="background-size: auto 60%; background-position: 50%;
+background-repeat: no-repeat; background-image: url('/app_resource/{{ title_logo }}');"{% endif %}{% endblock %}
+{% block title1 %}{{ title1 }}{% endblock %}
+{% block title2 %}{{ title2 }}{% endblock %}
+{% block custom_tools %}
+{% endblock %}
+
+{% block widget_content %}
+<!-- Main Start Block -->
+
+<!-- File: lansweeper_hunt_ip_mac.html
+
+    Copyright (c) Lansweeper, 2022
+
+    This unpublished material is proprietary to Lansweeper.
+    All rights reserved. The methods and
+    techniques described herein are considered trade secrets
+    and/or confidential. Reproduction or distribution, in whole
+    or in part, is forbidden except by express written permission
+    of Lansweeper.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software distributed under
+    the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+    either express or implied. See the License for the specific language governing permissions
+    and limitations under the License.
+-->
+
+<style>
+    .lansweeper a:hover {
+        text-decoration: underline;
+    }
+
+    .lansweeper .wf-table-vertical {
+        width: initial;
+        font-size: 12px;
+    }
+
+    .lansweeper .wf-table-vertical td {
+        padding: 8px 10px;
+        border: 1px solid;
+    }
+
+    .lansweeper .wf-table-vertical tr td:first-child {
+        font-weight: bold;
+    }
+
+    .lansweeper .wf-table-horizontal {
+        border: 1px solid;
+        font-size: 12px;
+    }
+
+    .lansweeper .wf-table-horizontal th {
+        text-align: center;
+        border: 1px solid;
+        font-weight: normal;
+        font-size: 20px;
+        padding: 5px;
+        text-transform: capitalize;
+    }
+
+    .lansweeper .wf-table-horizontal td {
+        border: 1px solid;
+        padding: 8px 10px;
+    }
+
+    .lansweeper .wf-h3-style {
+        font-size: 20px
+    }
+
+    .lansweeper .wf-h4-style {
+        font-size: 16px
+    }
+
+    .lansweeper .collapse.in {
+        display: block !important;
+    }
+
+    .lansweeper .panel-collapse {
+        overflow-x: auto;
+    }
+
+    .lansweeper .glyphicon.glyphicon-dot:before {
+        content: "\25cf";
+        font-size: 10px;
+    }
+
+    .lansweeper .no-word-wrap {
+        white-space: nowrap;
+    }
+
+    .lansweeper a.nowrap {
+        white-space: nowrap;
+    }
+
+    .lansweeper .title {
+        font-weight: bold;
+        display:block;
+        text-transform: uppercase;
+    }
+
+    .lansweeper .subtitle {
+        font-weight: bold;
+    }
+</style>
+
+<div class="lansweeper" style="overflow: auto; width: 100%; height: 100%; padding-left:10px; padding-right:10px">
+    <!-- Main Div -->
+    {% for result in results %}
+    <!-- loop for each result -->
+    <br>
+
+    <!------------------- For each Result ---------------------->
+    {% if not result.data %}
+    <h4 class="wf-h4-style">No data found</h4>
+
+    {% else %}
+    <div class="data">
+
+        <!--Default View-->
+        <table class="wf-table-horizontal datatable">
+            <thead>
+                <th>Asset Details</th>
+            </thead>
+            <tbody>
+            {% for data in result.data %}
+            <tr>
+                <td style="padding-bottom: 10px; padding-top: 10px;">
+                    <table class="wf-table-horizontal dataTable">
+                        <thead>
+                            <tr>
+                                <th colspan="5">{{ data.assetBasicInfo.name}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="2">
+                                    <span class="title">Asset type</span>
+                                    <span>{{ data.assetBasicInfo.type }} </span>
+                                    <div style="padding-top: 10px;">
+                                        <span class="subtitle">Domain: </span>
+                                        {% if data.assetBasicInfo.domain %}
+                                            <span> {{ data.assetBasicInfo.domain }} </span>
+                                        {% else %}
+                                            <span> -- </span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td style="border-right: 0px;">
+                                    <span class="subtitle">IP Address</span>
+                                </td>
+                                <td style="border-left: 0px;">
+                                    {% if data.assetBasicInfo.ipAddress %}
+                                        <span>
+                                        <a class="no-word-wrap" href="javascript:;"
+                                            onclick="context_menu(this, [{'contains': ['lansweeper ip'], 'value':'{{ data.assetBasicInfo.ipAddress }}' }], 0, {{ container.id }}, null, false);">
+                                            {{ data.assetBasicInfo.ipAddress }}
+                                            &nbsp;
+                                            <span class="fa fa-caret-down" style="font-size: smaller;"></span><br>
+                                        </a>
+                                        </span>
+                                    {% else %}
+                                        <span> -- </span>
+                                    {% endif %}
+                                </td>
+                                <td style="border-right: 0px;">
+                                    <span class="subtitle">Site Name </span>
+                                </td>
+                                <td style="border-left: 0px;">
+                                    {% if data.site_name %}
+                                        <span> {{ data.site_name }} </span>
+                                    {% else %}
+                                        <span> -- </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-right: 0px;">
+                                    <span class="subtitle">MAC Address</span>
+                                </td>
+                                <td style="border-left: 0px;">
+                                    {% if data.assetBasicInfo.mac %}
+                                        <span>
+                                        <a class="no-word-wrap" href="javascript:;"
+                                            onclick="context_menu(this, [{'contains': ['lansweeper mac'], 'value':'{{ data.assetBasicInfo.mac }}' }], 0, {{ container.id }}, null, false);">
+                                            {{ data.assetBasicInfo.mac }}
+                                            &nbsp;
+                                            <span class="fa fa-caret-down" style="font-size: smaller;"></span><br>
+                                        </a>
+                                        </span>
+                                    {% else %}
+                                        <span> -- </span>
+                                    {% endif %}
+                                </td>
+                                <td style="border-right: 0px;">
+                                    <span class="subtitle">Description</span>
+                                </td>
+                                <td style="border-left: 0px;">
+                                    {% if data.assetBasicInfo.description %}
+                                        <span> {{ data.assetBasicInfo.description }} </span>
+                                    {% else %}
+                                        <span> -- </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">
+                                    <span class="title">Manufacturer</span>
+                                    <span>{{ data.assetCustom.manufacturer }} </span>
+                                </td>
+                                <td style="border-right: 0px;">
+                                    <span class="subtitle">Model</span>
+                                </td>
+                                <td style="border-left: 0px;">
+                                    {% if data.assetCustom.model %}
+                                        <span> {{ data.assetCustom.model }} </span>
+                                    {% else %}
+                                        <span> -- </span>
+                                    {% endif %}
+                                </td>
+                                <td style="border-right: 0px;">
+                                    <span class="subtitle">FQDN </span>
+                                </td>
+                                <td style="border-left: 0px;">
+                                    {% if data.assetBasicInfo.fqdn %}
+                                        <span> {{ data.assetBasicInfo.fqdn }} </span>
+                                    {% else %}
+                                        <span> -- </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-right: 0px;">
+                                    <span class="subtitle">Serial Number</span>
+                                </td>
+                                <td style="border-left: 0px;">
+                                    {% if data.assetCustom.serialNumber %}
+                                        <span> {{ data.assetCustom.serialNumber }} </span>
+                                    {% else %}
+                                        <span> -- </span>
+                                    {% endif %}
+                                </td>
+                                <td style="border-right: 0px;">
+                                    <span class="subtitle">System SKU </span>
+                                </td>
+                                <td style="border-left: 0px;">
+                                    {% if data.assetCustom.sku %}
+                                        <span> {{ data.assetCustom.sku }} </span>
+                                    {% else %}
+                                        <span> -- </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">
+                                    <span class="title">Asset Link</span>
+                                    <span><a href={{ data.url }} target="_blank">{{ data.assetBasicInfo.name}}</a></span>
+                                </td>
+                                <td style="border-right: 0px;">
+                                    <span class="subtitle"><div title="Testing">Last User Name</div></span>
+                                </td>
+                                <td style="border-left: 0px;">
+                                    {% if data.assetBasicInfo.userName %}
+                                        <span> {{ data.assetBasicInfo.userName }} </span>
+                                    {% else %}
+                                        <span> -- </span>
+                                    {% endif %}
+                                </td>
+                                <td style="border-right: 0px;">
+                                    <span class="subtitle">First Seen</span>
+                                </td>
+                                <td style="border-left: 0px;">
+                                    {% if data.assetBasicInfo.firstSeen %}
+                                        <span> {{ data.assetBasicInfo.firstSeen }} </span>
+                                    {% else %}
+                                        <span> -- </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-right: 0px;">
+                                    <span class="subtitle">Last User Domain</span>
+                                </td>
+                                <td style="border-left: 0px;">
+                                    {% if data.assetBasicInfo.userDomain %}
+                                        <span> {{ data.assetBasicInfo.userDomain }} </span>
+                                    {% else %}
+                                        <span> -- </span>
+                                    {% endif %}
+                                </td>
+                                <td style="border-right: 0px;">
+                                    <span class="subtitle">Last Seen</span>
+                                </td>
+                                <td style="border-left: 0px;">
+                                    {% if data.assetBasicInfo.lastSeen %}
+                                        <span> {{ data.assetBasicInfo.lastSeen }} </span>
+                                    {% else %}
+                                        <span> -- </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    {% endfor %}
+    <!-- loop for each result end -->
+</div> <!-- Main Div -->
+
+<script>
+    $.extend(true, $.fn.dataTable.defaults, {
+        "searching": false,
+        "bLengthChange": false,
+        "language": {
+            "paginate": {
+                "previous": "<i class='fa fa-angle-left fa-lg'></i>",
+                "next": "<i class='fa fa-angle-right fa-lg'></i>"
+            },
+            "emptyTable": "No data available"
+        },
+        "dom": '<"top">rt<"bottom"p><"clear">',
+        drawCallback: function(settings) {
+            var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+            pagination.toggle(this.api().page.info().pages > 1);
+        }
+    });
+    $.fn.DataTable.ext.pager.numbers_length = 5;
+    $('.datatable').DataTable();
+</script>
+{% endblock %}
+<!-- Main Start Block -->
