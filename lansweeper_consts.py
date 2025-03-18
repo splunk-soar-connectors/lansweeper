@@ -1,6 +1,6 @@
 # File: lansweeper_consts.py
 #
-# Copyright (c) Lansweeper, 2022
+# Copyright (c) Lansweeper, 2022-2025
 #
 # This unpublished material is proprietary to Lansweeper.
 # All rights reserved. The methods and
@@ -34,9 +34,7 @@ ERR_MSG_UNAVAILABLE = "Error message unavailable. Please check the asset configu
 
 # Constants relating to 'validate_integer'
 LANSWEEPER_VALID_INT_MSG = "Please provide a valid integer value in the '{param}' action parameter"
-LANSWEEPER_NON_NEG_NON_ZERO_INT_MSG = (
-    "Please provide a valid non-zero positive integer value in the '{param}' action parameter"
-)
+LANSWEEPER_NON_NEG_NON_ZERO_INT_MSG = "Please provide a valid non-zero positive integer value in the '{param}' action parameter"
 LANSWEEPER_NON_NEG_INT_MSG = "Please provide a valid non-negative integer value in the '{param}' action parameter"
 
 # Constants relating to success messages
@@ -50,24 +48,15 @@ LANSWEEPER_ERR_INVALID_URL = "Error connecting to server. Invalid URL: '{url}'"
 LANSWEEPER_ERR_INVALID_SCHEMA = "Error connecting to server. No connection adapters were found for '{url}' URL."
 LANSWEEPER_ERR_CONNECTING_TO_SERVER = "Error connecting to server. Details: {error}"
 LANSWEEPER_ERR_TEST_CONN_FAILED = "Test Connectivity Failed"
-LANSWEEPER_ERR_NO_AUTHORIZED_SITES_FOUND = (
-    "No authorized sites found. "
-    "Please run test connectivity or list authorized sites action first."
-)
+LANSWEEPER_ERR_NO_AUTHORIZED_SITES_FOUND = "No authorized sites found. Please run test connectivity or list authorized sites action first."
 LANSWEEPER_ERR_INVALID_SITE_IDS = (
     "No authorized sites found for the given 'site_id' action parameter. "
     "Please run list authorized sites action to check the valid inputs for this parameter."
 )
-LANSWEEPER_ERR_PROCESSING_AUTH_SITE_RESPONSE = (
-    "Error occurred while processing the authorized sites response from the server"
-)
+LANSWEEPER_ERR_PROCESSING_AUTH_SITE_RESPONSE = "Error occurred while processing the authorized sites response from the server"
 LANSWEEPER_ERR_INVALID_FIELDS = "Please provide a valid value in the '{key}' action parameter"
-LANSWEEPER_ERR_INVALID_IP = (
-    "IP validation failed for '{ip}'. Hence, skipping this IP address from being added to the conditions string."
-)
-LANSWEEPER_ERR_INVALID_MAC = (
-    "MAC validation failed for '{mac}'. Hence, skipping this MAC address from being added to the conditions string."
-)
+LANSWEEPER_ERR_INVALID_IP = "IP validation failed for '{ip}'. Hence, skipping this IP address from being added to the conditions string."
+LANSWEEPER_ERR_INVALID_MAC = "MAC validation failed for '{mac}'. Hence, skipping this MAC address from being added to the conditions string."
 
 # State file error messages
 LANSWEEPER_ERR_INVALID_PERMISSION_STATE_FILE = (
