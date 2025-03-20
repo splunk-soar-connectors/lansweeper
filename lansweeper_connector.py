@@ -1,6 +1,6 @@
 # File: lansweeper_connector.py
 #
-# Copyright (c) Lansweeper, 2022
+# Copyright (c) Lansweeper, 2022-2025
 #
 # This unpublished material is proprietary to Lansweeper.
 # All rights reserved. The methods and
@@ -47,10 +47,7 @@ class RetVal(tuple):
 class MACAllowsTrailingDelimiters(macaddress.MAC):
     """Represent a subclass to define additional valid MAC formats."""
 
-    other_valid_formats_allowed = (
-        "xx xx xx xx xx xx",
-        "xxx:xxx:xxx:xxx"
-    )
+    other_valid_formats_allowed = ("xx xx xx xx xx xx", "xxx:xxx:xxx:xxx")
     formats = macaddress.MAC.formats + other_valid_formats_allowed
 
 
@@ -64,7 +61,7 @@ class LansweeperConnector(BaseConnector):
     def __init__(self):
         """Initialize global variables."""
         # Call the BaseConnectors init first
-        super(LansweeperConnector, self).__init__()
+        super().__init__()
 
         self._state = {}
         self._authorized_sites = {}
@@ -92,9 +89,9 @@ class LansweeperConnector(BaseConnector):
             pass
 
         if not error_code:
-            error_text = "Error Message: {}".format(error_msg)
+            error_text = f"Error Message: {error_msg}"
         else:
-            error_text = "Error Code: {}. Error Message: {}".format(error_code, error_msg)
+            error_text = f"Error Code: {error_code}. Error Message: {error_msg}"
 
         return error_text
 
@@ -190,9 +187,7 @@ class LansweeperConnector(BaseConnector):
             return RetVal(phantom.APP_SUCCESS, {})
 
         return RetVal(
-            action_result.set_status(
-                phantom.APP_ERROR, LANSWEEPER_ERR_EMPTY_RESPONSE.format(code=response.status_code)
-            ),
+            action_result.set_status(phantom.APP_ERROR, LANSWEEPER_ERR_EMPTY_RESPONSE.format(code=response.status_code)),
             None,
         )
 
@@ -221,7 +216,7 @@ class LansweeperConnector(BaseConnector):
 
         if not error_text:
             error_text = "Empty response and no information received"
-        message = "Status Code: {}. Data from server: {}".format(status_code, error_text)
+        message = f"Status Code: {status_code}. Data from server: {error_text}"
 
         message = message.replace("{", "{{").replace("}", "}}")
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
@@ -241,9 +236,7 @@ class LansweeperConnector(BaseConnector):
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
             return RetVal(
-                action_result.set_status(
-                    phantom.APP_ERROR, LANSWEEPER_ERR_UNABLE_TO_PARSE_JSON_RESPONSE.format(error=error_msg)
-                ),
+                action_result.set_status(phantom.APP_ERROR, LANSWEEPER_ERR_UNABLE_TO_PARSE_JSON_RESPONSE.format(error=error_msg)),
                 None,
             )
 
@@ -252,7 +245,7 @@ class LansweeperConnector(BaseConnector):
             try:
                 error_msg = ". ".join([error.get("message") for error in errors if error.get("message")])
                 if error_msg:
-                    message = "Error from server. Status Code: {}. Error Details: {}".format(status_code, error_msg)
+                    message = f"Error from server. Status Code: {status_code}. Error Details: {error_msg}"
                     return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
             except Exception:
                 pass
@@ -262,14 +255,12 @@ class LansweeperConnector(BaseConnector):
             return RetVal(phantom.APP_SUCCESS, resp_json)
 
         if resp_json.get("name") and resp_json.get("message"):
-            message = "Error from server. Error Code: {}. Error Message: {}".format(
-                resp_json["name"], resp_json["message"]
-            )
+            message = "Error from server. Error Code: {}. Error Message: {}".format(resp_json["name"], resp_json["message"])
             return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
         # You should process the error returned in the json
         error_text = r.text.replace("{", "{{").replace("}", "}}")
-        message = "Error from server. Status Code: {}. Data from server: {}".format(status_code, error_text)
+        message = f"Error from server. Status Code: {status_code}. Data from server: {error_text}"
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
@@ -306,9 +297,7 @@ class LansweeperConnector(BaseConnector):
 
         # everything else is actually an error at this point
         error_text = r.text.replace("{", "{{").replace("}", "}}")
-        message = "Can't process response from server. Status Code: {} Data from server: {}".format(
-            r.status_code, error_text
-        )
+        message = f"Can't process response from server. Status Code: {r.status_code} Data from server: {error_text}"
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
@@ -347,9 +336,7 @@ class LansweeperConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
-    def _make_rest_call(
-        self, url, action_result, headers=None, params=None, data=None, json=None, method="get", verify=True
-    ):
+    def _make_rest_call(self, url, action_result, headers=None, params=None, data=None, json=None, method="get", verify=True):
         """
         Make the REST call to the app.
 
@@ -371,26 +358,20 @@ class LansweeperConnector(BaseConnector):
         try:
             request_func = getattr(requests, method)
         except AttributeError:
-            return RetVal(action_result.set_status(phantom.APP_ERROR, "Invalid method: {}".format(method)), resp_json)
+            return RetVal(action_result.set_status(phantom.APP_ERROR, f"Invalid method: {method}"), resp_json)
 
         try:
             r = request_func(url, verify=verify, data=data, json=json, headers=headers, params=params, timeout=60)
         except requests.exceptions.InvalidURL as e:
             self.debug_print(self._get_error_message_from_exception(e))
-            return RetVal(
-                action_result.set_status(phantom.APP_ERROR, LANSWEEPER_ERR_INVALID_URL.format(url=url)), resp_json
-            )
+            return RetVal(action_result.set_status(phantom.APP_ERROR, LANSWEEPER_ERR_INVALID_URL.format(url=url)), resp_json)
         except requests.exceptions.InvalidSchema as e:
             self.debug_print(self._get_error_message_from_exception(e))
-            return RetVal(
-                action_result.set_status(phantom.APP_ERROR, LANSWEEPER_ERR_INVALID_SCHEMA.format(url=url)), resp_json
-            )
+            return RetVal(action_result.set_status(phantom.APP_ERROR, LANSWEEPER_ERR_INVALID_SCHEMA.format(url=url)), resp_json)
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
             return RetVal(
-                action_result.set_status(
-                    phantom.APP_ERROR, LANSWEEPER_ERR_CONNECTING_TO_SERVER.format(error=error_msg)
-                ),
+                action_result.set_status(phantom.APP_ERROR, LANSWEEPER_ERR_CONNECTING_TO_SERVER.format(error=error_msg)),
                 resp_json,
             )
 
@@ -475,10 +456,7 @@ class LansweeperConnector(BaseConnector):
         while True:
             # Make rest call
             ret_val, response = self._make_rest_call(
-                action_result=action_result,
-                url=LANSWEEPER_QUERY_ENDPOINT,
-                json={"query": query, "variables": variables},
-                method="post"
+                action_result=action_result, url=LANSWEEPER_QUERY_ENDPOINT, json={"query": query, "variables": variables}, method="post"
             )
             if phantom.is_fail(ret_val):
                 return action_result.get_status(), []
@@ -500,9 +478,7 @@ class LansweeperConnector(BaseConnector):
                 break
 
             # If cursor for next page is not available, exit the paginator.
-            cursor = (
-                response.get("data", {}).get("site", {}).get("assetResources", {}).get("pagination", {}).get("next")
-            )
+            cursor = response.get("data", {}).get("site", {}).get("assetResources", {}).get("pagination", {}).get("next")
             if not cursor:
                 break
 
@@ -550,7 +526,7 @@ class LansweeperConnector(BaseConnector):
                     authorized_site_ids.append(site_id)
                 else:
                     unauthorized_site_ids.append(site_id)
-                    self.debug_print("Site ID '{}' is not authorized".format(site_id))
+                    self.debug_print(f"Site ID '{site_id}' is not authorized")
 
             if not sites:
                 return (
@@ -579,9 +555,7 @@ class LansweeperConnector(BaseConnector):
 
         # Integer validation for 'max_results_per_site' action parameter
         max_results_per_site = param.get("max_results_per_site", LANSWEEPER_DEFAULT_LIMIT)
-        ret_val, max_results_per_site = self._validate_integer(
-            action_result, max_results_per_site, "max_results_per_site"
-        )
+        ret_val, max_results_per_site = self._validate_integer(action_result, max_results_per_site, "max_results_per_site")
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
@@ -598,14 +572,11 @@ class LansweeperConnector(BaseConnector):
         for ip in ip_list:
             if self._is_ipv4(ip):
                 valid_ips.append(ip)
-                ip_condition_string += (
-                    """{
+                ip_condition_string += f"""{{
                     operator: EQUAL,
                     path: "assetBasicInfo.ipAddress",
-                    value: "%s"
-                },"""
-                    % ip
-                )
+                    value: "{ip}"
+                }},"""
             else:
                 invalid_ips.append(ip)
                 self.debug_print(LANSWEEPER_ERR_INVALID_IP.format(ip=ip))
@@ -619,10 +590,9 @@ class LansweeperConnector(BaseConnector):
         total_items = 0
 
         for site_id, site_name in sites.items():
-
             # Create query
-            query = """query getAssetResources($pagination: AssetsPaginationInputValidated) {
-                site(id: "%s") {
+            query = f"""query getAssetResources($pagination: AssetsPaginationInputValidated) {{
+                site(id: "{site_id}") {{
                     assetResources (
                         assetPagination: $pagination,
                         fields: [
@@ -643,32 +613,24 @@ class LansweeperConnector(BaseConnector):
                             "assetCustom.sku",
                             "url"
                         ],
-                        filters: {
+                        filters: {{
                             conjunction: OR,
-                            conditions: [%s]
-                        }
-                    ) {
+                            conditions: [{ip_condition_string}]
+                        }}
+                    ) {{
                         total
-                        pagination {
+                        pagination {{
                             limit
                             current
                             next
                             page
-                        }
+                        }}
                         items
-                    }
-                }
-            }""" % (
-                site_id,
-                ip_condition_string
-            )
+                    }}
+                }}
+            }}"""
 
-            variables = {
-                "pagination": {
-                    "limit": min(max_results_per_site, LANSWEEPER_DEFAULT_PAGE_LIMIT),
-                    "page": "FIRST"
-                }
-            }
+            variables = {"pagination": {"limit": min(max_results_per_site, LANSWEEPER_DEFAULT_PAGE_LIMIT), "page": "FIRST"}}
 
             # make rest call
             ret_val, items = self._paginator(
@@ -693,16 +655,13 @@ class LansweeperConnector(BaseConnector):
                 "authorized_site_ids": authorized_site_ids,
                 "unauthorized_site_ids": unauthorized_site_ids,
                 "valid_ips": valid_ips,
-                "invalid_ips": invalid_ips
+                "invalid_ips": invalid_ips,
             }
         )
         if total_items == 0:
             return action_result.set_status(phantom.APP_SUCCESS, "No assets found for the given IP address")
 
-        message = "Total assets: {}, Total sites: {}.".format(
-            total_items,
-            len(authorized_site_ids) + len(unauthorized_site_ids)
-        )
+        message = f"Total assets: {total_items}, Total sites: {len(authorized_site_ids) + len(unauthorized_site_ids)}."
         message += " Please refer to the summary in the action result dictionary for more information."
 
         return action_result.set_status(phantom.APP_SUCCESS, message)
@@ -724,9 +683,7 @@ class LansweeperConnector(BaseConnector):
 
         # Integer validation for 'max_results_per_site' action parameter
         max_results_per_site = param.get("max_results_per_site", LANSWEEPER_DEFAULT_LIMIT)
-        ret_val, max_results_per_site = self._validate_integer(
-            action_result, max_results_per_site, "max_results_per_site"
-        )
+        ret_val, max_results_per_site = self._validate_integer(action_result, max_results_per_site, "max_results_per_site")
         if phantom.is_fail(ret_val):
             return action_result.get_status()
 
@@ -743,14 +700,11 @@ class LansweeperConnector(BaseConnector):
         for mac in mac_list:
             if self._is_mac(mac):
                 valid_macs.append(mac)
-                mac_condition_string += (
-                    """{
+                mac_condition_string += f"""{{
                     operator: EQUAL,
                     path: "assetBasicInfo.mac",
-                    value: "%s"
-                },"""
-                    % mac
-                )
+                    value: "{mac}"
+                }},"""
             else:
                 invalid_macs.append(mac)
                 self.debug_print(LANSWEEPER_ERR_INVALID_MAC.format(mac=mac))
@@ -765,10 +719,9 @@ class LansweeperConnector(BaseConnector):
         total_items = 0
 
         for site_id, site_name in sites.items():
-
             # Create query
-            query = """query getAssetResources($pagination: AssetsPaginationInputValidated) {
-                site(id: "%s") {
+            query = f"""query getAssetResources($pagination: AssetsPaginationInputValidated) {{
+                site(id: "{site_id}") {{
                     assetResources (
                         assetPagination: $pagination,
                         fields: [
@@ -789,32 +742,24 @@ class LansweeperConnector(BaseConnector):
                             "assetCustom.sku",
                             "url"
                         ],
-                        filters: {
+                        filters: {{
                             conjunction: OR,
-                            conditions: [%s]
-                        }
-                    ) {
+                            conditions: [{mac_condition_string}]
+                        }}
+                    ) {{
                         total
-                        pagination {
+                        pagination {{
                             limit
                             current
                             next
                             page
-                        }
+                        }}
                         items
-                    }
-                }
-            }""" % (
-                site_id,
-                mac_condition_string
-            )
+                    }}
+                }}
+            }}"""
 
-            variables = {
-                "pagination": {
-                    "limit": min(max_results_per_site, LANSWEEPER_DEFAULT_PAGE_LIMIT),
-                    "page": "FIRST"
-                }
-            }
+            variables = {"pagination": {"limit": min(max_results_per_site, LANSWEEPER_DEFAULT_PAGE_LIMIT), "page": "FIRST"}}
 
             # make rest call
             ret_val, items = self._paginator(
@@ -839,16 +784,13 @@ class LansweeperConnector(BaseConnector):
                 "authorized_site_ids": authorized_site_ids,
                 "unauthorized_site_ids": unauthorized_site_ids,
                 "valid_macs": valid_macs,
-                "invalid_macs": invalid_macs
+                "invalid_macs": invalid_macs,
             }
         )
         if total_items == 0:
             return action_result.set_status(phantom.APP_SUCCESS, "No assets found for the given MAC address")
 
-        message = "Total assets: {}, Total sites: {}.".format(
-            total_items,
-            len(authorized_site_ids) + len(unauthorized_site_ids)
-        )
+        message = f"Total assets: {total_items}, Total sites: {len(authorized_site_ids) + len(unauthorized_site_ids)}."
         message += " Please refer to the summary in the action result dictionary for more information."
 
         return action_result.set_status(phantom.APP_SUCCESS, message)
@@ -864,7 +806,7 @@ class LansweeperConnector(BaseConnector):
         action = self.get_action_identifier()
         ret_val = phantom.APP_SUCCESS
 
-        self.debug_print("action_id: {}".format(self.get_action_identifier()))
+        self.debug_print(f"action_id: {self.get_action_identifier()}")
 
         # Dictionary mapping each action with its corresponding actions
         action_mapping = {
@@ -903,7 +845,7 @@ class LansweeperConnector(BaseConnector):
 
         # get the asset config
         config = self.get_config()
-        self._identity_code = config['identity_code']
+        self._identity_code = config["identity_code"]
 
         # Get the list of stored authorized sites in the state file
         self._authorized_sites = self._state.get(LANSWEEPER_AUTH_SITES_STRING, {})
@@ -911,7 +853,7 @@ class LansweeperConnector(BaseConnector):
         # Initialize headers
         self._headers = {
             "Content-Type": "application/json",
-            "Authorization": LANSWEEPER_AUTHORIZATION_HEADER.format(identity_code=self._identity_code)
+            "Authorization": LANSWEEPER_AUTHORIZATION_HEADER.format(identity_code=self._identity_code),
         }
 
         return phantom.APP_SUCCESS
@@ -953,7 +895,6 @@ def main():
     password = args.password
 
     if username is not None and password is None:
-
         # User specified a username but not a password, so ask
         import getpass
 

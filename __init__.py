@@ -1,6 +1,6 @@
 # File: __init__.py
 #
-# Copyright (c) Lansweeper, 2022
+# Copyright (c) Lansweeper, 2022-2025
 #
 # This unpublished material is proprietary to Lansweeper.
 # All rights reserved. The methods and
