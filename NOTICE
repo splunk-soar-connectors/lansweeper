@@ -1,21 +1,44 @@
 Splunk SOAR Lansweeper
-Copyright (c) Lansweeper, 2022
+Copyright (c) Lansweeper, 2022-2025
 
-Third-party Software Attributions:
+Third Party Software Attributions:
 
-Library: beautifulsoup4
+Name: beautifulsoup4
 Version: 4.9.1
+Author: Leonard Richardson
 License: MIT
-Copyright 2004-2017 Leonard Richardson
-Copyright 2004-2019 Leonard Richardson
-Copyright 2018 Isaac Muse
 
-Library: macaddress
+Name: certifi
+Version: 2025.1.31
+Author: Kenneth Reitz
+License: MPL-2.0
+
+Name: chardet
+Version: 3.0.4
+Author: Daniel Blanchard
+License: LGPL
+
+Name: idna
+Version: 2.10
+Author: Kim Davies
+License: BSD-like
+
+Name: macaddress
 Version: 1.1.3
-License: BSD Zero
-Copyright 2021 Alexander Kozhevnikov <mentalisttraceur@gmail.com>
+Author: Alexander Kozhevnikov
+License: 0BSD
 
-Library: requests
+Name: requests
 Version: 2.25.0
+Author: Kenneth Reitz
 License: Apache 2.0
-Kenneth Reitz
+
+Name: soupsieve
+Version: 2.6
+Author:
+License:
+
+Name: urllib3
+Version: 1.26.20
+Author: Andrey Petrov
+License: MIT
