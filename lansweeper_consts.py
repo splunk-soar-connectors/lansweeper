@@ -1,6 +1,6 @@
 # File: lansweeper_consts.py
 #
-# Copyright (c) Lansweeper, 2022-2025
+# Copyright (c) Lansweeper, 2022-2026
 #
 # This unpublished material is proprietary to Lansweeper.
 # All rights reserved. The methods and

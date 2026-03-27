@@ -1,9 +1,9 @@
 # Lansweeper
 
-Publisher: Lansweeper \
-Connector Version: 1.0.2 \
-Product Vendor: Lansweeper \
-Product Name: Lansweeper \
+Publisher: Lansweeper <br>
+Connector Version: 1.0.2 <br>
+Product Vendor: Lansweeper <br>
+Product Name: Lansweeper <br>
 Minimum Product Version: 5.0.0
 
 This app integrates with Lansweeper to perform investigative actions
@@ -18,16 +18,16 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration \
-[list authorized sites](#action-list-authorized-sites) - Retrieve authorized sites from Lansweeper with their ID(s) and names \
-[hunt ip](#action-hunt-ip) - Fetch the details of the asset from the Lansweeper platform for the given site ID and IP address \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration <br>
+[list authorized sites](#action-list-authorized-sites) - Retrieve authorized sites from Lansweeper with their ID(s) and names <br>
+[hunt ip](#action-hunt-ip) - Fetch the details of the asset from the Lansweeper platform for the given site ID and IP address <br>
 [hunt mac](#action-hunt-mac) - Fetch the details of the asset from the Lansweeper platform for the given site ID and MAC address
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity using supplied configuration
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -42,7 +42,7 @@ No Output
 
 Retrieve authorized sites from Lansweeper with their ID(s) and names
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -65,7 +65,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Fetch the details of the asset from the Lansweeper platform for the given site ID and IP address
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -115,7 +115,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Fetch the details of the asset from the Lansweeper platform for the given site ID and MAC address
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -165,7 +165,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
