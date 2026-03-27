@@ -1,7 +1,7 @@
 # Lansweeper
 
 Publisher: Lansweeper <br>
-Connector Version: 1.0.2 <br>
+Connector Version: 1.1.0 <br>
 Product Vendor: Lansweeper <br>
 Product Name: Lansweeper <br>
 Minimum Product Version: 5.0.0
