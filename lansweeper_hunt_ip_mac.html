@@ -161,7 +161,7 @@
                               <span>
                                 <a class="no-word-wrap"
                                    href="javascript:;"
-                                   onclick="context_menu(this, [{'contains': ['lansweeper ip'], 'value':'{{ data.assetBasicInfo.ipAddress }}' }], 0, {{ container.id }}, null, false);">
+                                   onclick="context_menu(this, [{'contains': ['lansweeper ip'], 'value':'{{ data.assetBasicInfo.ipAddress|escapejs }}' }], 0, {{ container.id }}, null, false);">
                                   {{ data.assetBasicInfo.ipAddress }}
                                   &nbsp;
                                   <span class="fa fa-caret-down" style="font-size: smaller;"></span>
@@ -192,7 +192,7 @@
                               <span>
                                 <a class="no-word-wrap"
                                    href="javascript:;"
-                                   onclick="context_menu(this, [{'contains': ['lansweeper mac'], 'value':'{{ data.assetBasicInfo.mac }}' }], 0, {{ container.id }}, null, false);">
+                                   onclick="context_menu(this, [{'contains': ['lansweeper mac'], 'value':'{{ data.assetBasicInfo.mac|escapejs }}' }], 0, {{ container.id }}, null, false);">
                                   {{ data.assetBasicInfo.mac }}
                                   &nbsp;
                                   <span class="fa fa-caret-down" style="font-size: smaller;"></span>
